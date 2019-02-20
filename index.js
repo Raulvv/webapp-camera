@@ -1,30 +1,13 @@
-var constraints = { video: { facingMode: "user" }, audio: false };
-var track = null;
+import cors from 'cors';
+import express from 'express';
 
-const cameraView = document.querySelector("#camera--view"),
-    cameraOutput = document.querySelector("#camera--output"),
-    cameraSensor = document.querySelector("#camera--sensor"),
-    cameraTrigger = document.querySelector("#camera--trigger");
+const app = express();
 
-function cameraStart() {
-    navigator.mediaDevices
-        .getUserMedia(constraints)
-        .then(function(stream) {
-            track = stream.getTracks()[0];
-            cameraView.srcObject = stream;
-        })
-        .catch(function(error) {
-            console.error("Oops. Something is broken.", error);
-        });
-}
+app.use(cors());
+app.get('/', (req, res) => {
+  res.render('index');
+});
 
-cameraTrigger.onclick = function() {
-    cameraSensor.width = cameraView.videoWidth;
-    cameraSensor.height = cameraView.videoHeight;
-    cameraSensor.getContext("2d").drawImage(cameraView, 0, 0);
-    cameraOutput.src = cameraSensor.toDataURL("image/webp");
-    cameraOutput.classList.add("taken");
-    track.stop();
-};
-
-window.addEventListener("load", cameraStart, false);
+app.listen(3000, () =>
+  console.log('Example app listening on port 3000!'),
+);
